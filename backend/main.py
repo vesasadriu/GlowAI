@@ -5,28 +5,30 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
-load_dotenv()  # kjo lexon .env
+load_dotenv()  # Kjo lexon skedarin .env
+
+# Marrim API Key
 api_key = os.getenv("HUGGINGFACE_API_KEY")
 
 app = FastAPI()
 
+# RREGULLIMI I CORS: Lejon komunikimin me Vercel
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],  # Lejon çdo faqe (përfshirë Vercel-in tënd) të marrë të dhëna
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 1. POINT THE CLIENT TO HUGGING FACE INSTEAD OF OPENAI
+# Konfigurimi i klientit për Hugging Face
 client = OpenAI(
-    base_url="https://router.huggingface.co/v1",  # <--- New address!
+    base_url="https://router.huggingface.co/v1",
     api_key=api_key
 )
 
 class ChatRequest(BaseModel):
     message: str
 
-# This is the "brain" of your app
 SYSTEM_PROMPT = """You are an AI Cosmetic Ingredient Analyst and Skincare Dupe Finder.
 
 Your job is to analyze cosmetic ingredient lists and recommend affordable drugstore alternatives to expensive skincare products. Your responses must be scientifically grounded and easy to understand for skincare consumers.
@@ -52,9 +54,14 @@ Tone: professional, helpful, and educational."""
 async def chat(request: ChatRequest):
     if not request.message.strip():
         raise HTTPException(status_code=400, detail="Mesazhi është i zbrazët")
+    
+    # Sigurohemi që API Key ekziston para se të bëjmë kërkesën
+    if not api_key:
+        raise HTTPException(status_code=500, detail="API Key për Hugging Face mungon në Backend!")
+
     try:
-       response = client.chat.completions.create(
-            model="Qwen/Qwen2.5-7B-Instruct", # <--- Added the server tag!
+        response = client.chat.completions.create(
+            model="Qwen/Qwen2.5-7B-Instruct",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": request.message}
@@ -62,7 +69,14 @@ async def chat(request: ChatRequest):
             max_tokens=2000, 
             temperature=0.7
         )
-       return {"reply": response.choices[0].message.content}
+        # Kthejmë përgjigjen direkt
+        return {"reply": response.choices[0].message.content}
+        
     except Exception as e:
-        print(f"THE ERROR IS: {str(e)}") # This will print errors in your terminal
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"GABIMI NË BACKEND: {str(e)}") 
+        raise HTTPException(status_code=500, detail=f"AI Error: {str(e)}")
+
+# Opsionale: Një rrugë (route) e thjeshtë për të parë nëse backend-i është ndezur
+@app.get("/")
+async def root():
+    return {"status": "GlowAI Backend is running!"}
