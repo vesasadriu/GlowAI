@@ -1,0 +1,17 @@
+# Mbrojtja per Backend (Python)
+.venv/
+__pycache__/
+backend/.env
+
+# Mbrojtja per Frontend (React)
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Fshehje e pergjithshme
+.env
+.DS_Store
