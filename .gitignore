@@ -15,3 +15,4 @@ frontend/.env.production.local
 # Fshehje e pergjithshme
 .env
 .DS_Store
+.env.local
