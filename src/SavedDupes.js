@@ -3,6 +3,10 @@ import { supabase } from './supabaseClient';
 
 export default function SavedDupes({ session, refreshKey }) {
   const [dupes, setDupes] = useState([]);
+  
+  // SHTUAR: State për gabimet e fshirjes dhe për të ditur cili element po fshihet
+  const [errorMsg, setErrorMsg] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     if (session) fetchDupes();
@@ -17,18 +21,21 @@ export default function SavedDupes({ session, refreshKey }) {
   };
 
   const fshiProduktin = async (id_e_produktit) => {
-    // 1. I themi Supabase të fshijë rreshtin nga tabela e saktë (saved_dupes)
+    setErrorMsg(""); // Pastrojmë error-et e vjetra
+    setDeletingId(id_e_produktit); // Tregojmë që po fillon fshirja për këtë ID
+
     const { error } = await supabase
       .from('saved_dupes') 
       .delete()
       .eq('id', id_e_produktit);
 
     if (error) {
-      alert("Gabim gjatë fshirjes: " + error.message);
+      // ZËVENDËSOJMË ALERT-IN ME ERROR STATE VIZUAL
+      setErrorMsg("Gabim gjatë fshirjes: " + error.message);
+      setDeletingId(null);
     } else {
-      // 2. Nëse fshihet me sukses në DB, e heqim direkt nga ekrani
-      // Përdorim variablat 'setDupes' dhe 'dupes' që ekzistojnë në këtë komponent
       setDupes(dupes.filter(produkt => produkt.id !== id_e_produktit));
+      setDeletingId(null);
     }
   };
 
@@ -38,6 +45,13 @@ export default function SavedDupes({ session, refreshKey }) {
         <h3 style={{ fontSize: '20px', margin: 0 }}>Koleksioni im 🧴</h3>
         <span style={{ fontSize: '13px', color: '#888' }}>{dupes.length} Produkte</span>
       </div>
+
+      {/* SHTUAR: Kutia e Error-it për fshirjen */}
+      {errorMsg && (
+        <div style={{ background: '#fee2e2', color: '#991b1b', padding: '10px', borderRadius: '8px', marginBottom: '15px', border: '1px solid #f87171', fontSize: '14px' }}>
+          ⚠️ {errorMsg}
+        </div>
+      )}
 
       {dupes.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px', background: 'white', borderRadius: '12px', border: '1px dashed #ccc' }}>
@@ -49,22 +63,24 @@ export default function SavedDupes({ session, refreshKey }) {
             <div key={item.id} style={{ 
               background: 'white', padding: '20px', borderRadius: '12px', 
               boxShadow: '0 4px 12px rgba(0,0,0,0.03)', border: '1px solid #eee',
-              position: 'relative' // SHTUAR: Për të lejuar pozicionimin e butonit X
+              position: 'relative',
+              opacity: deletingId === item.id ? 0.5 : 1 // SHTUAR: Zbehet pak kur po fshihet
             }}>
               
               {/* Butoni i fshirjes */}
               <button 
                 onClick={() => fshiProduktin(item.id)}
+                disabled={deletingId === item.id} // Bllokon klikimet e tjera ndërkohë që po fshihet
                 style={{
                   position: 'absolute', top: '15px', right: '15px',
                   background: 'none', border: 'none', color: '#ccc',
-                  fontSize: '14px', cursor: 'pointer', padding: '5px'
+                  fontSize: '14px', cursor: deletingId === item.id ? 'not-allowed' : 'pointer', padding: '5px'
                 }}
-                onMouseOver={(e) => e.target.style.color = '#dc2626'} // Bëhet i kuq kur kalon mausin
-                onMouseOut={(e) => e.target.style.color = '#ccc'}
+                onMouseOver={(e) => { if (deletingId !== item.id) e.target.style.color = '#dc2626'; }} 
+                onMouseOut={(e) => { if (deletingId !== item.id) e.target.style.color = '#ccc'; }}
                 title="Fshi produktin"
               >
-                ✖
+                {deletingId === item.id ? "⌛" : "✖"}
               </button>
 
               <div style={{ color: '#dc2626', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '4px' }}>Original</div>
