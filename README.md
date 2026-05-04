@@ -19,3 +19,4 @@ GlowAI është një aplikacion web i ndërtuar me React që ndihmon përdoruesit
 1. Bëni clone këtë repozitor:
    ```bash
    git clone https://github.com/vesasadriu/GlowAI.git
+2. Live Demo: https://glow-ai-git-main-vesasadrius-projects.vercel.app/
