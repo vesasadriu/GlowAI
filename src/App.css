@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 body {
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: #fcf9f9; /* Një rozë shumë e zbehtë, estetike */
-  color: #333;
+  background-color: #FDF2F8; /* Roza e zbehtë e aplikacionit */
+  color: #1F2937;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -13,11 +13,62 @@ body {
   box-sizing: border-box;
 }
 
-button {
+/* Animacion i butë për të gjitha butonat dhe inputet */
+button, input, textarea {
   transition: all 0.2s ease-in-out;
 }
 
 button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   STILIMI I PERGJIGJES SE AI (Tabelat dhe Teksti)
+   Kjo i ben tabelat e Markdown te duken si iOS Widgets
+========================================================= */
+
+.ai-content p {
+  color: #4B5563;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.ai-content strong {
+  color: #1F2937;
+}
+
+.ai-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px #F3F4F6; /* Border i hollë gri, stil Apple */
+}
+
+.ai-content th {
+  background: #FDF2F8; /* Koka e tabelës me ngjyrë rozë të hapur */
+  padding: 12px 15px;
+  text-align: left;
+  font-size: 13px;
+  color: #F472B6;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.ai-content td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #F3F4F6;
+  font-size: 14px;
+  color: #374151;
+  background: white;
+}
+
+.ai-content tr:last-child td {
+  border-bottom: none;
 }

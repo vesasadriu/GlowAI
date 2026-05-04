@@ -8,7 +8,6 @@ import SavedDupes from './SavedDupes';
 import Home from './Home'; 
 import './App.css';
 
-// KETU ISHTE PROBLEMI - Duhet te jete i perkufizuar lart fare:
 const SYSTEM_PROMPT = `You are an AI Cosmetic Ingredient Analyst and Skincare Dupe Finder.
 
 Your job is to analyze cosmetic ingredient lists and recommend affordable drugstore alternatives to expensive skincare products. Your responses must be scientifically grounded and easy to understand for skincare consumers.
@@ -113,39 +112,66 @@ function ChatPage({ session, setRefreshKey, refreshKey }) {
   };
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "40px 20px" }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
-        <h1 onClick={() => navigate('/')} style={{ cursor: 'pointer', margin: 0, fontSize: '28px' }}>✨GlowAI✨</h1>
-        <button onClick={handleLogout} style={{ padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', border: '1px solid #ddd', background: 'transparent' }}>Log Out</button>
-      </div>
-
-      <div style={{ background: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', marginBottom: '40px' }}>
-        {error && <div style={{ background: '#fee2e2', color: '#991b1b', padding: '12px', borderRadius: '8px', marginBottom: '15px' }}>⚠️ {error}</div>}
-        <textarea
-          rows="3"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Find me a dupe for..."
-          style={{ width: "100%", padding: "16px", borderRadius: "12px", border: "1px solid #eee", fontSize: "16px", outline: 'none', resize: 'none' }}
-        />
-        <button onClick={handleSubmit} disabled={loading} style={{ width: '100%', marginTop: '10px', padding: '15px', borderRadius: '12px', background: '#111', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}>
-          {loading ? "Searching..." : "Find Dupe"}
-        </button>
-      </div>
-
-      {aiData && (
-        <div style={{ background: 'white', padding: '30px', borderRadius: '16px', border: '1px solid #eee', marginBottom: '40px' }}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiData.reply}</ReactMarkdown>
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-             {saveError && <div style={{ color: 'red', marginBottom: '10px' }}>{saveError}</div>}
-             <button onClick={handleAutoSave} disabled={saving || isSaved} style={{ padding: '12px 24px', borderRadius: '20px', background: isSaved ? '#10b981' : '#f472b6', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
-               {isSaved ? "Saved✓" : "💾Save to your collection"}
-             </button>
-          </div>
+    <div style={{ minHeight: "100vh", backgroundColor: "#FDF2F8", padding: "20px", fontFamily: "'Inter', sans-serif" }}>
+      <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+        
+        {/* App Navbar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', background: 'white', padding: '15px 25px', borderRadius: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+          <h1 onClick={() => navigate('/')} style={{ fontSize: '22px', cursor: 'pointer', margin: 0, fontWeight: '800', color: '#F472B6' }}>
+            GlowAI ✨
+          </h1>
+          <button onClick={handleLogout} style={{ padding: '8px 16px', borderRadius: '12px', border: 'none', background: '#F3F4F6', color: '#4B5563', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+            Log out
+          </button>
         </div>
-      )}
-      
-      <SavedDupes session={session} refreshKey={refreshKey} />
+
+        {/* Search Input Card */}
+        <div style={{ background: 'white', padding: '25px', borderRadius: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.04)', marginBottom: '30px' }}>
+          {error && <div style={{ background: '#fee2e2', color: '#991b1b', padding: '12px', borderRadius: '8px', marginBottom: '15px' }}>⚠️ {error}</div>}
+          
+          <textarea
+            rows="3"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type a product name (e.g. Dior Lip Oil)..."
+            style={{ width: "100%", padding: "16px", borderRadius: "16px", border: "2px solid #FDF2F8", fontSize: "15px", outline: 'none', resize: 'none', backgroundColor: "#FAFAFA", fontFamily: 'inherit', boxSizing: 'border-box' }}
+          />
+          <button 
+            onClick={handleSubmit} 
+            disabled={loading} 
+            style={{ width: '100%', marginTop: '15px', padding: '16px', background: '#F472B6', color: 'white', border: 'none', borderRadius: '16px', cursor: 'pointer', fontWeight: '700', fontSize: '15px', boxShadow: '0 4px 15px rgba(244, 114, 182, 0.3)' }}
+          >
+            {loading ? "Searching Database... 🔍" : "Find Dupe ✨"}
+          </button>
+        </div>
+
+        {/* AI Response Card */}
+        {aiData && (
+          <div style={{ background: 'white', padding: '30px', borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)', marginBottom: '40px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', borderBottom: '2px solid #FDF2F8', paddingBottom: '15px' }}>
+              <div style={{ background: '#F472B6', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>🤖</div>
+              <h3 style={{ margin: 0, fontSize: '16px', color: '#1F2937' }}>GlowAI Match</h3>
+            </div>
+            
+            <div className="ai-content">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiData.reply}</ReactMarkdown>
+            </div>
+            
+            <div style={{ marginTop: '20px' }}>
+              {saveError && <div style={{ color: 'red', marginBottom: '10px', textAlign: 'center' }}>{saveError}</div>}
+              <button 
+                onClick={handleAutoSave} 
+                disabled={saving || isSaved} 
+                style={{ width: '100%', padding: '14px', borderRadius: '16px', background: isSaved ? '#10B981' : '#1F2937', color: 'white', border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '700' }}
+              >
+                {isSaved ? "Saved to Collection ✓" : "Save this Dupe 💾"}
+              </button>
+            </div>
+          </div>
+        )}
+        
+        <SavedDupes session={session} refreshKey={refreshKey} />
+      </div>
     </div>
   );
 }
