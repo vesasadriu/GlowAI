@@ -31,7 +31,7 @@ export default function SavedDupes({ session, refreshKey }) {
 
     if (error) {
       // ZËVENDËSOJMË ALERT-IN ME ERROR STATE VIZUAL
-      setErrorMsg("Gabim gjatë fshirjes: " + error.message);
+      setErrorMsg("Delete failed: " + error.message);
       setDeletingId(null);
     } else {
       setDupes(dupes.filter(produkt => produkt.id !== id_e_produktit));
@@ -42,8 +42,8 @@ export default function SavedDupes({ session, refreshKey }) {
   return (
     <div style={{ marginTop: '40px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h3 style={{ fontSize: '20px', margin: 0 }}>Koleksioni im 🧴</h3>
-        <span style={{ fontSize: '13px', color: '#888' }}>{dupes.length} Produkte</span>
+        <h3 style={{ fontSize: '20px', margin: 0 }}>My collection💌</h3>
+        <span style={{ fontSize: '13px', color: '#888' }}>{dupes.length} Products</span>
       </div>
 
       {/* SHTUAR: Kutia e Error-it për fshirjen */}
@@ -55,7 +55,7 @@ export default function SavedDupes({ session, refreshKey }) {
 
       {dupes.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px', background: 'white', borderRadius: '12px', border: '1px dashed #ccc' }}>
-          <p style={{ color: '#888', margin: 0 }}>Nuk ke ruajtur ende asnjë produkt.</p>
+          <p style={{ color: '#888', margin: 0 }}>No products saved yet.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '15px' }}>

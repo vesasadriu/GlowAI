@@ -17,10 +17,10 @@ export default function Auth() {
     
     // VALIDIMI PA ALERT (Shfaqet si tekst i kuq)
     if (!email || !password || (!isLogin && !name)) {
-      return setMessage({ type: 'error', text: "Ju lutem plotësoni të gjitha fushat!" });
+      return setMessage({ type: 'error', text: "Please fill out all blank areas!" });
     }
     if (password.length < 6) {
-      return setMessage({ type: 'error', text: "Fjalëkalimi duhet të ketë të paktën 6 karaktere!" });
+      return setMessage({ type: 'error', text: "Password must have at least 6 characters!" });
     }
 
     setLoading(true);
@@ -44,7 +44,7 @@ export default function Auth() {
       if (error) {
         setMessage({ type: 'error', text: error.message });
       } else {
-        setMessage({ type: 'success', text: "Llogaria u krijua! Mund të bësh Log In tani." });
+        setMessage({ type: 'success', text: "Account created! You can Log In now." });
         setTimeout(() => {
           setIsLogin(true); // E kalon automatikisht te forma e Login pas suksesit
           setMessage({ type: '', text: '' });
@@ -59,10 +59,10 @@ export default function Auth() {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
       <div style={{ background: 'white', padding: '40px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
         <h2 style={{ margin: '0 0 10px', fontSize: '24px', color: '#111' }}>
-          {isLogin ? "Mirësevjen në GlowAI ✨" : "Krijo Llogari 🧴"}
+          {isLogin ? "Welcome to ✨GlowAI✨" : "Create account🤍"}
         </h2>
         <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>
-          {isLogin ? "Hyr për të ruajtur produktet e tua." : "Regjistrohu për të filluar."}
+          {isLogin ? "Log In to save your products." : "Sign Up to start."}
         </p>
 
         {/* <-- SHTUAR: Kutia e Mesazheve (Error ose Sukses) në vend të alert() --> */}
@@ -76,7 +76,7 @@ export default function Auth() {
             fontSize: '14px', 
             border: `1px solid ${message.type === 'error' ? '#f87171' : '#34d399'}` 
           }}>
-            {message.type === 'error' ? '⚠️ ' : '✅ '} {message.text}
+            {message.type === 'error' ? '❌ ' : '✔️ '} {message.text}
           </div>
         )}
         
@@ -84,29 +84,29 @@ export default function Auth() {
           
           {!isLogin && (
             <input 
-              type="text" placeholder="Emri juaj" value={name} onChange={(e) => setName(e.target.value)} 
+              type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} 
               style={{ padding: '12px 16px', borderRadius: '8px', border: '1px solid #e0e0e0', fontSize: '15px', outline: 'none' }}
             />
           )}
 
           <input 
-            type="email" placeholder="Emaili yt" value={email} onChange={(e) => setEmail(e.target.value)} 
+            type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} 
             style={{ padding: '12px 16px', borderRadius: '8px', border: '1px solid #e0e0e0', fontSize: '15px', outline: 'none' }}
           />
           <input 
-            type="password" placeholder="Fjalëkalimi (min. 6 karaktere)" value={password} onChange={(e) => setPassword(e.target.value)} 
+            type="password" placeholder="Password (min. 6 characters)" value={password} onChange={(e) => setPassword(e.target.value)} 
             style={{ padding: '12px 16px', borderRadius: '8px', border: '1px solid #e0e0e0', fontSize: '15px', outline: 'none' }}
           />
           
           <button type="submit" disabled={loading} style={{ 
             marginTop: '10px', padding: '12px', background: '#111', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', opacity: loading ? 0.7 : 1
           }}>
-            {loading ? "Po ngarkohet..." : (isLogin ? "Log In" : "Sign Up")}
+            {loading ? "Loading..." : (isLogin ? "Log In" : "Sign Up")}
           </button>
         </form>
 
         <p style={{ marginTop: '20px', fontSize: '14px', color: '#666' }}>
-          {isLogin ? "Nuk ke një llogari? " : "Ke tashmë një llogari? "}
+          {isLogin ? "Don't have an account? " : "Already have an account? "}
           <span 
             onClick={() => {
               setIsLogin(!isLogin);
@@ -114,7 +114,7 @@ export default function Auth() {
             }} 
             style={{ color: '#f472b6', fontWeight: 'bold', cursor: 'pointer' }}
           >
-            {isLogin ? "Regjistrohu" : "Hyr këtu"}
+            {isLogin ? "Sign Up" : "Log In"}
           </span>
         </p>
       </div>
